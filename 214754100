@@ -1,0 +1,185 @@
+
+const mysql = require('mysql');
+const express =require('express');
+const router = express.Router();
+const db = require('../config/conn');
+const mysqlConn= require('../config/conn');
+
+//get all client
+// Retrieve all artisan
+router.get('/artisan/:id', function (req, res) {
+    let userType={userType:req.body.userType}
+    mysqlConn.query('SELECT * FROM user where userType= ',+ req.param.userType,userType ,function (error, results, fields) {
+        if (error) throw error;
+        return res.send({ error: false, data: results, message: 'artisan list.' });
+    });
+});
+
+// Retrieve client/artisan with id 
+router.get('/artisan/:id', function (req, res) {
+    let user_id = req.params.clientid;
+     
+    mysqlConn.query('SELECT * FROM artisan WHERE id = ?', user_id, (error, result) => {
+            if (error) throw error;
+     
+            response.send(result);
+        });
+    });
+// Add a new user  
+router.post('/artisan', function (req, res) {
+    let post = {name:req.body.name,surname:req.body.surname,email:req.body.email,address:req.body.address,password:req.body.password,userType:req.body.userType,userId:req.body.userId};
+    if (!post) {
+      return res.status(400).send({ error:true, message: 'Please provide user' });
+    }
+    
+    mysqlConn.query("INSERT INTO user SET ? ",[post], function (error, results, fields) {
+  if (error) throw error;
+    return res.send({ error: false, data: results, message: 'New user has been created successfully.' });
+    });
+});
+
+ //deleting from db
+//  Delete user
+
+router.delete('/artisan/:id', function (req, res) {
+    let user_id = {userId:res.body.userId};
+    if (!user_id) {
+        return res.status(400).send({ error: true, message: 'Please provide user_id' });
+    }
+    mysqlConn.query('DELETE FROM artisan WHERE id = ',req.param.userId ,user_id, function (error, results, fields) {
+        if (error) throw error;
+        return res.send({ error: false, data: results, message: 'User has been updated successfully.' });
+    });
+    }); 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// api for categories
+
+
+
+    router.get('/category', function (req, res) {
+        mysqlConn.query('SELECT * FROM categories', function (error, results, fields) {
+            if (error) throw error;
+            return res.send({ error: false, data: results, message: 'category list.' });
+        });
+    });
+    
+    // Retrieve category by id
+    router.get('/category/:id', function (req, res) {
+
+        
+        let catid={catId:req.body.catId};
+         
+        mysqlConn.query('SELECT * FROM categories WHERE catId = ?',[catid] ,(error, result) => {
+                if (error) throw error;
+         
+                res.send(result);
+            });
+        });
+    // Add a new category 
+    router.post('/category', function (req, res) {
+        let post = {catId:req.body.catId,CatName:req.body.CatName};
+        if (!post) {
+          return res.status(400).send({ error:true, message: 'Please provide user' });
+        }
+        
+        mysqlConn.query("INSERT INTO categories SET ? ",[post], function (error, results, fields) {
+      if (error) throw error;
+        return res.send({ error: false, data: results, message: 'New user has been created successfully.' });
+        });
+    });
+
+    
+     //deleting from db
+    //  Deleting category
+    
+    router.delete('/category/:id', function (req, res) {
+        let user_id = {catId:req.body.catId};
+        if (!user_id) {
+            return res.status(400).send({ error: true, message: 'Please provide user_id' });
+        }
+        mysqlConn.query('DELETE FROM categories WHERE catId =?', [user_id], function (error, results, fields) {
+            if (error) throw error;
+            return res.send({ error: false, data: results, message: 'User has been updated successfully.' });
+        });
+        }); 
+
+
+
+
+
+
+
+
+
+        
+// api for jobposter
+
+// get all job poster
+
+router.get('/jobposter/:userType', function (req, res) {
+    let userType={userType:req.body.userType}
+    mysqlConn.query('SELECT * FROM user where userType =?',[userType], function (error, results, fields) {
+        if (error) throw error;
+        return res.send({ error: false, data: results, message: 'category list.' });
+    });
+});
+
+// Retrieve category by id
+router.get('/jobposter/:id', function (req, res) {
+
+    
+    let userId={catId:req.body.catId};
+     
+    mysqlConn.query('SELECT * FROM categories WHERE userId = ?',[catid] ,(error, result) => {
+            if (error) throw error;
+     
+            res.send(result);
+        });
+    });
+// Add a new jobposter
+router.post('/jobposter', function (req, res) {
+    let post = {name:req.body.name,surname:req.body.surname,email:req.body.email,address:req.body.address,password:req.body.password,userType:req.body.userType,userId:req.body.userId};
+    if (!post) {
+      return res.status(400).send({ error:true, message: 'Please provide user' });
+    }
+    
+    mysqlConn.query("INSERT INTO user SET ? ",[post], function (error, results, fields) {
+  if (error) throw error;
+    return res.send({ error: false, data: results, message: 'New user has been created successfully.' });
+    });
+});
+
+
+ //deleting from db
+//  Deleting jobposter
+
+router.delete('/jobposter/:id', function (req, res) {
+    let user_id = {userId:req.body.userId};
+    if (!user_id) {
+        return res.status(400).send({ error: true, message: 'Please provide user_id' });
+    }
+    mysqlConn.query('DELETE FROM user WHERE userId=?', [user_id], function (error, results, fields) {
+        if (error) throw error;
+        return res.send({ error: false, data: results, message: 'User has been updated successfully.' });
+    });
+    }); 
+
+
+
+
+
+module.exports=router;
